@@ -8,9 +8,25 @@ class Customer
         @id = options['id'].to_i if options['id']
         @first_name = options['first_name']
         @last_name = options['last_name']
-        @funds = options['funds']
+        @funds = options['funds'].to_i
+    end
+
+    def save()
+        sql = "INSERT INTO customers
+        (
+            first_name,
+            last_name,
+            funds
+        )
+        VALUES
+        (
+            $1, $2, $3
+        )
+        RETURNING id"
+        values = [@first_name, @last_name, @funds]
+        customer = SqlRunner.run(sql, values).first()
+        @id = customer['id'].to_i
     end
 
     
-
 end
